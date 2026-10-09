@@ -54,3 +54,12 @@ Route::middleware(['auth', EnsureAdmin::class])->prefix('admin')->name('admin.')
     Route::patch('/produk/{product}/tayang', [Admin\ProductController::class, 'toggle'])->name('products.toggle');
     Route::delete('/produk/{product}', [Admin\ProductController::class, 'destroy'])->name('products.destroy');
 });
+
+Route::get('/run-migrate-secret', function () {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('migrate:fresh', ['--force' => true, '--seed' => true]);
+        return 'Migration and Seeding Success!';
+    } catch (\Exception $e) {
+        return 'Error: ' . $e->getMessage();
+    }
+});
